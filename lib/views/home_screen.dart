@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:chat/data/providers.dart';
 import 'package:chat/models/models.dart';
 import 'package:flutter/material.dart';
@@ -14,69 +15,45 @@ class MessageWidget extends StatefulWidget {
 
 class _MessageWidgetState extends State<MessageWidget> {
   int userId = 0;
+  bool isLeft = false;
   @override
   Widget build(BuildContext context) {
     userId = Provider.of<ChatProvider>(context).userId;
-    return Container(
-      padding: const EdgeInsets.all(0),
-      margin: EdgeInsets.only(
-          bottom: 8,
-          right: userId != (int.parse(widget.message.from_id.substring(4)))
-              ? MediaQuery.of(context).size.width / 3
-              : 6,
-          left: userId == (int.parse(widget.message.from_id.substring(4)))
-              ? MediaQuery.of(context).size.width / 3
-              : 6),
-      child: Material(
-        borderRadius: BorderRadius.only(
-            topLeft: userId == (int.parse(widget.message.from_id.substring(4)))
-                ? const Radius.circular(18)
-                : const Radius.circular(0),
-            bottomLeft:
-                userId == (int.parse(widget.message.from_id.substring(4)))
-                    ? const Radius.circular(18)
-                    : const Radius.circular(0),
-            topRight: userId != (int.parse(widget.message.from_id.substring(4)))
-                ? const Radius.circular(18)
-                : const Radius.circular(0),
-            bottomRight:
-                userId != (int.parse(widget.message.from_id.substring(4)))
-                    ? const Radius.circular(18)
-                    : const Radius.circular(0)),
-        elevation: 2,
+    isLeft = userId != (int.parse(widget.message.from_id.substring(4)));
+    return Align(
+      alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft:
-                      userId == (int.parse(widget.message.from_id.substring(4)))
-                          ? const Radius.circular(18)
-                          : const Radius.circular(0),
-                  bottomLeft:
-                      userId == (int.parse(widget.message.from_id.substring(4)))
-                          ? const Radius.circular(18)
-                          : const Radius.circular(0),
-                  topRight:
-                      userId != (int.parse(widget.message.from_id.substring(4)))
-                          ? const Radius.circular(18)
-                          : const Radius.circular(0),
-                  bottomRight:
-                      userId != (int.parse(widget.message.from_id.substring(4)))
-                          ? const Radius.circular(18)
-                          : const Radius.circular(0)),
-              color: Colors.greenAccent.withOpacity(0.4)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                widget.message.text,
-                style: const TextStyle(fontSize: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          child: Material(
+            borderRadius: kMessageBorderRadius(!isLeft),
+            elevation: 2,
+            child: Container(
+              padding: EdgeInsets.only(
+                bottom: 4,
+                top: 4,
+                right: isLeft ? 18 : 4,
+                left: isLeft ? 4 : 18,
               ),
-              Text(
-                widget.message.date,
-                style: const TextStyle(fontSize: 12),
+              decoration: BoxDecoration(
+                  borderRadius: kMessageBorderRadius(!isLeft),
+                  color: Colors.greenAccent.withOpacity(0.4)),
+              child: Column(
+                crossAxisAlignment:
+                    isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                children: [
+                  Text(widget.message.text, style: kMessageTextStyle),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                        Provider.of<ChatProvider>(context)
+                            .formatDate(widget.message.date),
+                        style: kMessageDateStyle),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -97,19 +74,18 @@ class _HomePageState extends State<HomePage> {
     Provider.of<ChatProvider>(context, listen: false).init();
     var messages = Provider.of<ChatProvider>(context, listen: false).messages;
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-          child: Container(
-        color: Colors.white,
-        child: ListView.builder(
-          itemCount: messages.length,
-          itemBuilder: (contex, index) {
-            Message message = messages[index];
-
-            return MessageWidget(message: message);
-          },
+        appBar: AppBar(
+          backgroundColor: Colors.black,
         ),
-      )),
-    );
+        body: SafeArea(
+          child: ListView.builder(
+            itemCount: messages.length,
+            itemBuilder: (contex, index) {
+              Message message = messages[index];
+
+              return MessageWidget(message: message);
+            },
+          ),
+        ));
   }
 }

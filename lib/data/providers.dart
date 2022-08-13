@@ -91,7 +91,11 @@ class ChatProvider extends ChangeNotifier {
   }
 
   String formatDate(String date) {
-    String f = date.split(':')[1];
+    var f = date.split('T')[1].substring(0, 5);
     return f;
   }
+
+  // bool isArabic(String string){
+  //   var lang =string ?? global_state
+  // }
 }
