@@ -17,9 +17,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: ChangeNotifierProvider(
         create: (context) => ChatProvider(),
         builder: (context, child) => const HomePage(),

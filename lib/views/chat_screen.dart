@@ -26,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
             widget.chatAccountName,
             style: kTitleStyle,
           ),
+          centerTitle: true,
         ),
         body: SafeArea(
           child: ListView.builder(

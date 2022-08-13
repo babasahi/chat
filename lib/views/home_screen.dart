@@ -26,7 +26,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          centerTitle: true,
+          backgroundColor: Colors.deepOrangeAccent,
+          title: const Text(
+            'Chat Preview',
+            style: TextStyle(fontSize: 30, fontFamily: 'Poppins'),
+          ),
         ),
         body: SafeArea(
             child: Center(

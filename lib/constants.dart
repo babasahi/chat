@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
-const TextStyle kMessageTextStyle = TextStyle(
-  fontSize: 16,
-);
+const TextStyle kMessageTextStyle =
+    TextStyle(fontSize: 16, fontFamily: 'Poppins');
 
-const kTitleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+const kTitleStyle = TextStyle(
+    letterSpacing: 1,
+    fontSize: 26,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.bold);
 
 const TextStyle kMessageDateStyle = TextStyle(
-  fontSize: 12,
+  fontSize: 10,
+  fontFamily: 'Poppins',
   fontWeight: FontWeight.bold,
 );
 
