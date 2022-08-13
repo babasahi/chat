@@ -1,6 +1,7 @@
-import 'package:chat/data/data.dart';
+import 'package:chat/data/providers.dart';
 import 'package:chat/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({
@@ -52,15 +53,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<ChatProvider>(context, listen: false).init();
+    var messages = Provider.of<ChatProvider>(context, listen: false).messages;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
           child: Container(
         color: Colors.white,
         child: ListView.builder(
-          itemCount: data.messages.length,
+          itemCount: messages.length,
           itemBuilder: (contex, index) {
-            Message message = data.messages[index];
+            Message message = messages[index];
 
             return MessageWidget(message: message);
           },

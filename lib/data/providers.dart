@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:chat/models/models.dart';
@@ -6,16 +8,49 @@ import 'package:flutter/services.dart';
 
 class ChatProvider extends ChangeNotifier {
   List<Message> _messages = [];
+  String _chatAccountName = '';
+  int _chatAccountId = 0;
+  int _userChatId = 0;
+  String _userName = '';
+  ChatProvider();
 
   List<Message> get messages => _messages;
+
   void init() {
     readFile();
+  }
+
+  void getChatInfo(String response) {
+    final raw = json.decode(response);
+    _chatAccountName = raw['name'];
+    print('got name');
+    _chatAccountId = raw['id'];
+    print('got id');
+    for (var message in raw['messages']) {
+      var m = message as Map<String, dynamic>;
+      if (m.containsKey('from') && m.containsKey('from_id')) {
+        if (m['from'] != _chatAccountName) {
+          _userName = m['from'] as String;
+          print('got user name');
+          String i = m['from_id'] as String;
+          i = i.substring(4);
+          _userChatId = int.parse(i);
+          break;
+        }
+      }
+    }
+    notifyListeners();
+    print('chat name is :$_chatAccountName');
+    print('chat id is :$_chatAccountId');
+    print('user id is :$_userChatId');
+    print('user name is$_userName');
   }
 
   Future<void> readFile() async {
     final response = await rootBundle.loadString('assets/file.json');
     print('loaded files');
     _messages = parseData(response);
+    getChatInfo(response);
     notifyListeners();
     print('filled items');
   }
