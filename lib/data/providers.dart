@@ -10,11 +10,15 @@ class ChatProvider extends ChangeNotifier {
   List<Message> _messages = [];
   String _chatAccountName = '';
   int _chatAccountId = 0;
-  int _userChatId = 0;
+  int _userId = 0;
   String _userName = '';
   ChatProvider();
 
   List<Message> get messages => _messages;
+  String get chatAccountName => _chatAccountName;
+  int get chatAccountId => _chatAccountId;
+  String get userName => _userName;
+  int get userId => _userId;
 
   void init() {
     readFile();
@@ -34,7 +38,7 @@ class ChatProvider extends ChangeNotifier {
           print('got user name');
           String i = m['from_id'] as String;
           i = i.substring(4);
-          _userChatId = int.parse(i);
+          _userId = int.parse(i);
           break;
         }
       }
@@ -42,7 +46,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
     print('chat name is :$_chatAccountName');
     print('chat id is :$_chatAccountId');
-    print('user id is :$_userChatId');
+    print('user id is :$_userId');
     print('user name is$_userName');
   }
 

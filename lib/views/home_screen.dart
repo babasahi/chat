@@ -3,36 +3,77 @@ import 'package:chat/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MessageWidget extends StatelessWidget {
-  const MessageWidget({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
+class MessageWidget extends StatefulWidget {
+  const MessageWidget({Key? key, required this.message}) : super(key: key);
 
   final Message message;
 
   @override
+  State<MessageWidget> createState() => _MessageWidgetState();
+}
+
+class _MessageWidgetState extends State<MessageWidget> {
+  int userId = 0;
+  @override
   Widget build(BuildContext context) {
+    userId = Provider.of<ChatProvider>(context).userId;
     return Container(
       padding: const EdgeInsets.all(0),
-      margin: EdgeInsets.symmetric(
-          vertical: 8, horizontal: MediaQuery.of(context).size.width / 3),
+      margin: EdgeInsets.only(
+          bottom: 8,
+          right: userId != (int.parse(widget.message.from_id.substring(4)))
+              ? MediaQuery.of(context).size.width / 3
+              : 6,
+          left: userId == (int.parse(widget.message.from_id.substring(4)))
+              ? MediaQuery.of(context).size.width / 3
+              : 6),
       child: Material(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        elevation: 4,
+        borderRadius: BorderRadius.only(
+            topLeft: userId == (int.parse(widget.message.from_id.substring(4)))
+                ? const Radius.circular(18)
+                : const Radius.circular(0),
+            bottomLeft:
+                userId == (int.parse(widget.message.from_id.substring(4)))
+                    ? const Radius.circular(18)
+                    : const Radius.circular(0),
+            topRight: userId != (int.parse(widget.message.from_id.substring(4)))
+                ? const Radius.circular(18)
+                : const Radius.circular(0),
+            bottomRight:
+                userId != (int.parse(widget.message.from_id.substring(4)))
+                    ? const Radius.circular(18)
+                    : const Radius.circular(0)),
+        elevation: 2,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
           decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              color: Colors.yellowAccent.withOpacity(0.6)),
+              borderRadius: BorderRadius.only(
+                  topLeft:
+                      userId == (int.parse(widget.message.from_id.substring(4)))
+                          ? const Radius.circular(18)
+                          : const Radius.circular(0),
+                  bottomLeft:
+                      userId == (int.parse(widget.message.from_id.substring(4)))
+                          ? const Radius.circular(18)
+                          : const Radius.circular(0),
+                  topRight:
+                      userId != (int.parse(widget.message.from_id.substring(4)))
+                          ? const Radius.circular(18)
+                          : const Radius.circular(0),
+                  bottomRight:
+                      userId != (int.parse(widget.message.from_id.substring(4)))
+                          ? const Radius.circular(18)
+                          : const Radius.circular(0)),
+              color: Colors.greenAccent.withOpacity(0.4)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                message.text,
+                widget.message.text,
                 style: const TextStyle(fontSize: 16),
               ),
               Text(
-                message.date,
+                widget.message.date,
                 style: const TextStyle(fontSize: 12),
               ),
             ],
