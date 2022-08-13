@@ -4,6 +4,8 @@ const TextStyle kMessageTextStyle = TextStyle(
   fontSize: 16,
 );
 
+const kTitleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
 const TextStyle kMessageDateStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.bold,

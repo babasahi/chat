@@ -90,12 +90,12 @@ class ChatProvider extends ChangeNotifier {
     return list;
   }
 
-  String formatDate(String date) {
-    var f = date.split('T')[1].substring(0, 5);
-    return f;
+  bool isArabic(String s) {
+    int c = s.runes.first;
+    if (c >= 0x0600 && c <= 0x06E0) {
+      print('testing');
+      return true;
+    }
+    return false;
   }
-
-  // bool isArabic(String string){
-  //   var lang =string ?? global_state
-  // }
 }
