@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:chat/data/providers.dart';
-import 'package:chat/views/home_screen.dart';
+import 'package:chat/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

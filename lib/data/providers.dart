@@ -53,35 +53,72 @@ class ChatProvider extends ChangeNotifier {
   Future<void> readFile() async {
     final response = await rootBundle.loadString('assets/file.json');
     print('loaded files');
-    _messages = parseData(response);
+    _messages = parseJsonToMessages(response);
     getChatInfo(response);
     notifyListeners();
     print('filled items');
   }
 
-  List<Message> parseData(String rawJson) {
+  List<Message> parseJsonToMessages(String rawJson) {
     List<Message> list = [];
     final data = json.decode(rawJson)['messages'];
     for (var json in data) {
       var result = json as Map<String, dynamic>;
-      if (result.containsKey('id') &&
-          result.containsKey('type') &&
-          result.containsKey('date') &&
-          result.containsKey('date_unixtime') &&
-          result.containsKey('from') &&
-          result.containsKey('from_id') &&
-          result.containsKey('reply_to_message_id') &&
-          result.containsKey('text')) {
-        if (result['text'].isNotEmpty && result['type'] == 'message') {
+      if (result.containsKey('media_type')) {
+        if (result['media_type'] == 'voice_message') {
           Message message = Message(
               id: result['id'],
-              type: result['type'],
+              type: MessageType.voice,
               date: result['date'],
               date_unixtime: result['date_unixtime'],
               from: result['from'],
               from_id: result['from_id'],
-              reply_to_message_id: result['reply_to_message_id'],
-              text: result['text']);
+              reply_to_message_id: result.containsKey('reply_to_message_id')
+                  ? result['reply_to_message_id']
+                  : -1,
+              text: '',
+              file: result['file'],
+              duration_seconds: result.containsKey('duration_seconds')
+                  ? result['duration_seconds']
+                  : 0);
+
+          list.add(message);
+        }
+      } else if (result['text'] != '') {
+        String m = result['text'].toString();
+
+        if (m.contains('"type": "link",')) {
+          Message message = Message(
+              id: result.containsKey('id') ? result['id'] : '',
+              type: MessageType.link,
+              date: result['date'],
+              date_unixtime: result['date_unixtime'],
+              from: result['from'],
+              from_id: result['from_id'],
+              reply_to_message_id: result.containsKey('reply_to_message_id')
+                  ? result['reply_to_message_id']
+                  : -1,
+              text: result[0]['text']['text'].toString(),
+              file: '',
+              duration_seconds: 0);
+
+          list.add(message);
+        } else {
+          Message message = Message(
+              id: result.containsKey('id') ? result['id'] : '',
+              type: MessageType.text,
+              date: result.containsKey('date') ? result['date'] : '',
+              date_unixtime: result.containsKey('date_unixtime')
+                  ? result['date_unixtime']
+                  : '',
+              from: result.containsKey('from') ? result['from'] : '',
+              from_id: result.containsKey('from_id') ? result['from_id'] : '',
+              reply_to_message_id: result.containsKey('reply_to_message_id')
+                  ? result['reply_to_message_id']
+                  : -1,
+              text: result['text'].toString(),
+              file: '',
+              duration_seconds: 0);
 
           list.add(message);
         }

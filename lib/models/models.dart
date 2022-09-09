@@ -2,13 +2,15 @@
 
 class Message {
   final int id;
-  final String type;
+  final MessageType type;
   final String date;
   final String date_unixtime;
   final String from;
   final String from_id;
   final int reply_to_message_id;
   final String text;
+  final String file;
+  final int duration_seconds;
 
   Message(
       {required this.id,
@@ -18,7 +20,9 @@ class Message {
       required this.from,
       required this.from_id,
       required this.reply_to_message_id,
-      required this.text});
+      required this.text,
+      required this.file,
+      required this.duration_seconds});
 
   static Message fromJson(Map<String, dynamic> json) {
     return Message(
@@ -29,15 +33,19 @@ class Message {
         from: json['from'],
         from_id: json['from_id'],
         reply_to_message_id: json['reply_to_message_id'],
-        text: json['text']);
+        text: json['text'],
+        duration_seconds: json['duration_seconds'],
+        file: json['file']);
   }
 }
 
-  // "id": 177712,
-  //  "type": "message",
-  //  "date": "2022-06-04T17:33:12",
-  //  "date_unixtime": "1654363992",
-  //  "from": "𝙱𝚊𝚋𝚎 𝚂𝚊𝚕𝚎𝚑 𝙼𝚊𝚑𝚏𝚘𝚞𝚍",
-  //  "from_id": "user1161880465",
-  //  "reply_to_message_id": 177711,
-  //  "text": "وانه كيني غزواني ؟"
+// "id": 177712,
+//  "type": "message",
+//  "date": "2022-06-04T17:33:12",
+//  "date_unixtime": "1654363992",
+//  "from": "𝙱𝚊𝚋𝚎 𝚂𝚊𝚕𝚎𝚑 𝙼𝚊𝚑𝚏𝚘𝚞𝚍",
+//  "from_id": "user1161880465",
+//  "reply_to_message_id": 177711,
+//  "text": "وانه كيني غزواني ؟"
+
+enum MessageType { text, voice, audio, video, image, link }
