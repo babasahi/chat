@@ -11,6 +11,8 @@ class Message {
   final String text;
   final String file;
   final int duration_seconds;
+  final int width;
+  final int height;
 
   Message(
       {required this.id,
@@ -19,6 +21,8 @@ class Message {
       required this.date_unixtime,
       required this.from,
       required this.from_id,
+      required this.height,
+      required this.width,
       required this.reply_to_message_id,
       required this.text,
       required this.file,
@@ -27,6 +31,8 @@ class Message {
   static Message fromJson(Map<String, dynamic> json) {
     return Message(
         id: json['id'],
+        width: json['width'],
+        height: json['height'],
         type: json['type'],
         date: json['date'],
         date_unixtime: json['date_unixtime'],

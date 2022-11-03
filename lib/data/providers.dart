@@ -68,6 +68,8 @@ class ChatProvider extends ChangeNotifier {
         if (result['media_type'] == 'voice_message') {
           Message message = Message(
               id: result['id'],
+              width: 0,
+              height: 0,
               type: MessageType.voice,
               date: result['date'],
               date_unixtime: result['date_unixtime'],
@@ -83,30 +85,94 @@ class ChatProvider extends ChangeNotifier {
                   : 0);
 
           list.add(message);
-        }
-      } else if (result['text'] != '') {
-        String m = result['text'].toString();
-
-        if (m.contains('"type": "link",')) {
+        } else if (result['media_type'] == 'video_file') {
           Message message = Message(
               id: result.containsKey('id') ? result['id'] : '',
-              type: MessageType.link,
+              type: MessageType.video,
               date: result['date'],
+              width: result['width'],
+              height: result['height'],
               date_unixtime: result['date_unixtime'],
               from: result['from'],
               from_id: result['from_id'],
               reply_to_message_id: result.containsKey('reply_to_message_id')
                   ? result['reply_to_message_id']
                   : -1,
-              text: result[0]['text']['text'].toString(),
-              file: '',
+              text: '',
+              file: result['file'],
               duration_seconds: 0);
 
           list.add(message);
+        }
+      } else if (result.containsKey('photo')) {
+        Message message = Message(
+            id: result['id'],
+            width: result['width'],
+            height: result['height'],
+            type: MessageType.image,
+            date: result['date'],
+            date_unixtime: result['date_unixtime'],
+            from: result['from'],
+            from_id: result['from_id'],
+            reply_to_message_id: result.containsKey('reply_to_message_id')
+                ? result['reply_to_message_id']
+                : -1,
+            text: '',
+            file: result['photo'],
+            duration_seconds: result.containsKey('duration_seconds')
+                ? result['duration_seconds']
+                : 0);
+
+        list.add(message);
+      } else if (result['text'] != '') {
+        String m = result['text'].toString();
+
+        if (m.startsWith('[') && m.endsWith(']')) {
+          if (m.contains('phone')) {
+            Message message = Message(
+                id: result.containsKey('id') ? result['id'] : '',
+                type: MessageType.text,
+                date: result['date'],
+                width: 0,
+                height: 0,
+                date_unixtime: result['date_unixtime'],
+                from: result['from'],
+                from_id: result['from_id'],
+                reply_to_message_id: result.containsKey('reply_to_message_id')
+                    ? result['reply_to_message_id']
+                    : -1,
+                text: m.substring(21).replaceRange(
+                    m.substring(21).length - 2, m.substring(21).length, ''),
+                file: '',
+                duration_seconds: 0);
+
+            list.add(message);
+          } else {
+            Message message = Message(
+                id: result.containsKey('id') ? result['id'] : '',
+                type: MessageType.link,
+                date: result['date'],
+                height: 0,
+                width: 0,
+                date_unixtime: result['date_unixtime'],
+                from: result['from'],
+                from_id: result['from_id'],
+                reply_to_message_id: result.containsKey('reply_to_message_id')
+                    ? result['reply_to_message_id']
+                    : -1,
+                text: m.substring(19).replaceRange(
+                    m.substring(19).length - 2, m.substring(19).length, ''),
+                file: '',
+                duration_seconds: 0);
+
+            list.add(message);
+          }
         } else {
           Message message = Message(
               id: result.containsKey('id') ? result['id'] : '',
               type: MessageType.text,
+              height: 0,
+              width: 0,
               date: result.containsKey('date') ? result['date'] : '',
               date_unixtime: result.containsKey('date_unixtime')
                   ? result['date_unixtime']
