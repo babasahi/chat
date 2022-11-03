@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:chat/data/providers.dart';
-import 'package:chat/views/screens/home_screen.dart';
+import 'package:chat/views/screens/import_file_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: ChangeNotifierProvider(
         create: (context) => ChatProvider(),
-        builder: (context, child) => const HomePage(),
+        builder: (context, child) => const ImportFilePage(),
       ),
     );
   }
